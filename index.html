@@ -76,16 +76,22 @@
     async function verifyCode() {
       const code = document.getElementById("codeInput").value.trim().toLowerCase();
       const message = document.getElementById("message");
-      
+
       try {
         const response = await fetch("codes.json");
         const codes = await response.json();
 
         if (codes[code]) {
           message.style.color = "#00ff90";
-          message.innerHTML = "✅ Code accepted! Downloading...";
+          message.innerHTML = "✅ Code accepted! Preparing download...";
+
           setTimeout(() => {
-            window.location.href = codes[code];
+            const link = document.createElement('a');
+            link.href = codes[code];
+            link.download = ""; // download attribute triggers download
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
           }, 1000);
         } else {
           message.style.color = "#ff4d4d";
