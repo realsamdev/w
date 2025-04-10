@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Samdev's</title>
   <style>
     body {
@@ -66,26 +66,34 @@
   <div class="container">
     <h1>Samdev's</h1>
     <p>Enter your download code 👇</p>
-    <input type="text" id="codeInput" placeholder="Enter code here...">
-    <br>
-    <button onclick="checkCode()">Download</button>
+    <input type="text" id="codeInput" placeholder="Enter code here..." />
+    <br />
+    <button onclick="verifyCode()">Download</button>
     <div id="message"></div>
   </div>
 
   <script>
-    function checkCode() {
-      const input = document.getElementById("codeInput").value.trim().toLowerCase();
+    async function verifyCode() {
+      const code = document.getElementById("codeInput").value.trim().toLowerCase();
       const message = document.getElementById("message");
+      
+      try {
+        const response = await fetch("codes.json");
+        const codes = await response.json();
 
-      if (input === "mc2025") {
-        message.style.color = "#00ff90";
-        message.innerHTML = "✅ Code accepted! Download will begin...";
-        setTimeout(() => {
-          window.location.href = "files/minecraft.apk";
-        }, 1500);
-      } else {
-        message.style.color = "#ff4d4d";
-        message.innerHTML = "❌ Invalid code. Try again.";
+        if (codes[code]) {
+          message.style.color = "#00ff90";
+          message.innerHTML = "✅ Code accepted! Downloading...";
+          setTimeout(() => {
+            window.location.href = codes[code];
+          }, 1000);
+        } else {
+          message.style.color = "#ff4d4d";
+          message.innerHTML = "❌ Invalid code. Try again.";
+        }
+      } catch (error) {
+        message.style.color = "orange";
+        message.innerHTML = "⚠️ Error loading codes. Try again later.";
       }
     }
   </script>
